@@ -11,13 +11,15 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        foreach (CategoryFixtures::CATEGORIES as $key => $categoryName) {
-            $program = new Program();
-            $program->setTitle('Film ' . $key);
-            $program->setSynopsis('Un film populaire pour les amateurs du genre ' . $categoryName);
-            $program->setCategory($this->getReference('category_' . $categoryName));
-            $manager->persist($program);
-            $manager->flush();
+        for ($i = 0; $i < 5; $i++) {
+            foreach (CategoryFixtures::CATEGORIES as $key => $categoryName) {
+                $program = new Program();
+                $program->setTitle('Film ' . $key . $i);
+                $program->setSynopsis('Un film populaire pour les amateurs du genre ' . $categoryName);
+                $program->setCategory($this->getReference('category_' . $categoryName));
+                $manager->persist($program);
+                $manager->flush();
+            }
         }
     }
     public function getDependencies()
