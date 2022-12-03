@@ -2,11 +2,14 @@
 // src/Controller/CategoryController.php
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Category;
+use App\Form\CategoryType;
+use App\Repository\ProgramRepository;
+use App\Repository\CategoryRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\CategoryRepository;
-use App\Repository\ProgramRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/category', name: 'category_')]
 class CategoryController extends AbstractController
@@ -19,6 +22,24 @@ class CategoryController extends AbstractController
             'category/index.html.twig',
             ['categories' => $categories]
         );
+    }
+
+    #[Route('/new', name : 'new')]
+    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    {
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) { 
+            $categoryRepository->save($category, true);
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->renderForm('category/new.html.twig',
+        [
+         'form' => $form,   
+        ]);
     }
 
     #[Route('/{categoryName}', methods: ['GET'], name: 'show')]
@@ -36,4 +57,5 @@ class CategoryController extends AbstractController
             'category' => $category,
         ]);
     }
+
 }
