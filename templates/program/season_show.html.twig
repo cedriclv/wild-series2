@@ -11,7 +11,7 @@
 
     <ul>
         {% for episode in season.episodes %}
-            <li>{{loop.index}}-- Titre : {{episode.title}}</li>
+            <li>{{loop.index}}-- Titre : {{episode.title}} -- <a href={{ path('program_episode_show', {program: program.id, season: season.id, episode: episode.id }) }}>Voir épisode</a></li>
         {% endfor %}
     </ul>
 
