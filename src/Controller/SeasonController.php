@@ -28,10 +28,20 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $seasonRepository->save($season, true);
-
-            return $this->redirectToRoute('app_season_index', [], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $seasonRepository->save($season, true);
+                $this->addFlash(
+                    'success',
+                    'the load has been successfully set'
+                 );
+                return $this->redirectToRoute('season_index');
+            }
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
         }
 
         return $this->renderForm('season/new.html.twig', [
@@ -54,10 +64,20 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $seasonRepository->save($season, true);
-
-            return $this->redirectToRoute('app_season_index', [], Response::HTTP_SEE_OTHER);
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $seasonRepository->save($season, true);
+                $this->addFlash(
+                    'success',
+                    'the load has been successfully set'
+                 );
+                return $this->redirectToRoute('season_index');
+            }
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
         }
 
         return $this->renderForm('season/edit.html.twig', [
@@ -71,6 +91,10 @@ class SeasonController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$season->getId(), $request->request->get('_token'))) {
             $seasonRepository->remove($season, true);
+            $this->addFlash(
+                'danger',
+                'Well deleted'
+             ); 
         }
 
         return $this->redirectToRoute('app_season_index', [], Response::HTTP_SEE_OTHER);

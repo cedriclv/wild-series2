@@ -28,10 +28,21 @@ class EpisodeController extends AbstractController
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $episodeRepository->save($episode, true);
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $episodeRepository->save($episode, true);
+                $this->addFlash(
+                    'success',
+                    'the load has been successfully set'
+                );
+                return $this->redirectToRoute('episode_index');
 
-            return $this->redirectToRoute('app_episode_index', [], Response::HTTP_SEE_OTHER);
+            }
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
         }
 
         return $this->renderForm('episode/new.html.twig', [
@@ -54,10 +65,21 @@ class EpisodeController extends AbstractController
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $episodeRepository->save($episode, true);
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $episodeRepository->save($episode, true);
+                $this->addFlash(
+                    'success',
+                    'the load has been successfully set'
+                );
+                return $this->redirectToRoute('episode_index');
 
-            return $this->redirectToRoute('app_episode_index', [], Response::HTTP_SEE_OTHER);
+            }
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
         }
 
         return $this->renderForm('episode/edit.html.twig', [
@@ -70,6 +92,10 @@ class EpisodeController extends AbstractController
     public function delete(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
+            $this->addFlash(
+               'danger',
+               'Well deleted'
+            );
             $episodeRepository->remove($episode, true);
         }
 

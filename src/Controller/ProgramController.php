@@ -33,9 +33,21 @@ class ProgramController extends AbstractController
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         
-        if ($form->isSubmitted() && $form->isValid()) { 
-            $programRepository->save($program,true);
-            return $this->redirectToRoute('program_index');
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $programRepository->save($program, true);
+                $this->addFlash(
+                   'success',
+                   'the load has been successfully set'
+                );
+                return $this->redirectToRoute('program_index');
+            }
+
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
         }
 
         return $this->renderForm('program/new.html.twig',[
@@ -102,4 +114,47 @@ class ProgramController extends AbstractController
             'episode' => $episode,            
         ]);
     }
+
+    #[Route('/{id}/edit', name: 'app_program_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Program $program, ProgramRepository $programRepository): Response
+    {
+        $form = $this->createForm(ProgramType::class, $program);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if($form->isValid()) { 
+                $programRepository->save($program, true);
+                $this->addFlash(
+                    'success',
+                    'the load has been successfully set'
+                 );
+                return $this->redirectToRoute('program_index');
+            }
+        } else {
+            $this->addFlash(
+                'danger',
+                'the load hasnot been successfully set'
+             );
+        }
+
+        return $this->renderForm('program/edit.html.twig', [
+            'program' => $program,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_program_delete', methods: ['POST'])]
+    public function delete(Request $request, Program $program, ProgramRepository $programRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$program->getId(), $request->request->get('_token'))) {
+            $programRepository->remove($program, true);
+            $this->addFlash(
+                'danger',
+                'Well deleted'
+             ); 
+        }
+
+        return $this->redirectToRoute('program_index', [], Response::HTTP_SEE_OTHER);
+    }
+
 }
