@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use Faker\Factory;;
+use Faker\Factory;
 use App\Entity\Season;
 use App\DataFixtures\ProgramFixtures;
 use Doctrine\Persistence\ObjectManager;
@@ -23,7 +23,7 @@ class SeasonFixtures extends Fixture implements DependentFixtureInterface
             $season->setYear($faker->year());
             $season->setDescription($faker->paragraphs(3, true));
             $this->addReference('season_' . $i, $season);
-            $program = $this->getReference('program_' . CategoryFixtures::CATEGORIES[random_int(0,4)] .random_int(0,2));
+            $program = $this->getReference('program_' . CategoryFixtures::CATEGORIES[random_int(0,4)] .random_int(0,(ProgramFixtures::NB_PROGRAM-1)));
             $season->setProgram($program);
             $manager->persist($season);
         }
