@@ -1,0 +1,9 @@
+{% extends "layoutEmail.html.twig" %}
+
+{% block body %}
+
+    <h1>Le nouvel episode {{episode.number}} s'intitule {{episode.title}}</h1>
+    <a href="{{ path('program_season_show', {'program': episode.season.program.id, 'season': episode.season.id}) }}">Voir la saison</a>
+
+{% endblock %}
+    

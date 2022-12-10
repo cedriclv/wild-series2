@@ -1,0 +1,17 @@
+{% extends "layoutEmail.html.twig" %}
+{% block body %}
+
+    <h1>nom du programme :  {{program.title}}</h1>
+    <p>Hello, le nouveau programme {{program.title}} est cree sur Wild Series ! </p>
+    <p>Voici les Acteurs
+    <ul>
+        {% for actor in program.actors %}
+        <li> {{actor.name}} </li>
+        {% endfor %}    
+    </ul>
+    </p>
+
+
+
+{% endblock %}
+

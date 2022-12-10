@@ -7,9 +7,11 @@ use App\Entity\Episode;
 use App\Entity\Program;
 use App\Form\ProgramType;
 use App\Service\ProgramDuration;
+use Symfony\Component\Mime\Email;
 use App\Repository\SeasonRepository;
 use App\Repository\ProgramRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -29,21 +31,34 @@ class ProgramController extends AbstractController
     }
 
     #[Route("/new",name : "new")]
-    public function new(Request $request, ProgramRepository $programRepository, SluggerInterface $slugger): Response
+    public function new(Request $request, ProgramRepository $programRepository, SluggerInterface $slugger, MailerInterface $mailer): Response
     {
         $program = new Program();
-        $slug = $slugger->slug($program->getTitle());
-        $program->setSlug($slug);
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         
         if ($form->isSubmitted()) {
-            if($form->isValid()) { 
+            if($form->isValid()) {
+                $slug = $slugger->slug($program->getTitle());
+                $program->setSlug($slug);
                 $programRepository->save($program, true);
                 $this->addFlash(
                    'success',
                    'the load has been successfully set'
                 );
+                $from = $this->getParameter('mailer_from');
+                $email = (new Email())
+                    ->from($from)
+                    ->to('your_email@example.com')
+                    ->subject('Une nouvelle série vient d\'être publiée !: ' . $program->getTitle())
+                    ->html($this->renderView('program/newProgramEmail.html.twig',
+                [
+                    'program' => $program,
+                ]));
+
+                $mailer->send($email);
+
+
                 return $this->redirectToRoute('program_index');
             }
 
