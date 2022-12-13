@@ -4,7 +4,10 @@
 
 {% block body %}
     <div class="media">
-        <img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
+    <pre>
+        {{ dump(program.poster) }}
+    </pre>
+        <img class="align-self-start mr-3" src="{{asset('uploads/images/posters/'~program.poster)}}" alt="{{ program.title }} posterr">
         <div class="media-body">
             <h1 class="mt-0">{{ program.title }}</h1>
             <p>{{ program.synopsis }}</p>

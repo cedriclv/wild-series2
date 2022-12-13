@@ -35,12 +35,43 @@ class ProgramController extends AbstractController
     {
         $program = new Program();
         $form = $this->createForm(ProgramType::class, $program);
+        
         $form->handleRequest($request);
         
         if ($form->isSubmitted()) {
-            if($form->isValid()) {
+            if($form->isValid()) { 
+                ///
+/*
+                $photo = $form->get('poster')->getData();
+
+                // this condition is needed because the 'brochure' field is not required
+                // so the PDF file must be processed only when a file is uploaded
+                if ($photo) {
+                    $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+    
+                    // Move the file to the directory where brochures are stored
+                    try {
+                        //dd($this->getParameter(name: 'image_directory'));exit();
+                        $photo->move(
+                            $this->getParameter(name: 'image_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+    
+                    // updates the 'brochureFilename' property to store the PDF file name
+                    // instead of its contents
+                    $program->setPoster($newFilename);
+                ///
+                }
+*/
                 $slug = $slugger->slug($program->getTitle());
                 $program->setSlug($slug);
+                //dd($program);exit();
                 $programRepository->save($program, true);
                 $this->addFlash(
                    'success',
@@ -137,7 +168,7 @@ class ProgramController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/edit', name: 'app_program_edit', methods: ['GET', 'POST'])]
+    #[Route('/{slug}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Program $program, ProgramRepository $programRepository): Response
     {
         $form = $this->createForm(ProgramType::class, $program);
