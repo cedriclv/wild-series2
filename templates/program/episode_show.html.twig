@@ -12,5 +12,15 @@ Titre de l'épisode : {{episode.title}}
 <br>
 Résume de l'épisode
 <p>{{episode.synopsis}}</p>
+<br>
+Résume de l'épisode
+{% for comment in episode.comments %}
+    <p>{{comment.comment}}</p>    
+{% endfor %}
+<br>
 <a href={{ path('program_index') }}>Retour à la liste des programmes</a>    
+<br>
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <a href={{ path("app_comment_new_by_Episode", { episode: episode.id }) }}>Laisser un commentaire</a>    
+{% endif %}
 {% endblock %}

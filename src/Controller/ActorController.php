@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/actor')]
+#[Route('/actor', name:'actor_')]
 class ActorController extends AbstractController
 {
 
-    #[Route('/', name: 'app_actor_index', methods: ['GET'])]
+    #[Route('/', name: 'index', methods: ['GET'])]
     public function index(ActorRepository $actorRepository): Response
     {
 
@@ -23,7 +23,7 @@ class ActorController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_actor_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(Request $request, ActorRepository $actorRepository): Response
     {
         $actor = new Actor();
@@ -33,7 +33,7 @@ class ActorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $actorRepository->save($actor, true);
 
-            return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('actor_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('actor/new.html.twig', [
@@ -42,7 +42,7 @@ class ActorController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_actor_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(Actor $actor): Response
     {
         return $this->render('actor/show.html.twig', [
@@ -50,7 +50,7 @@ class ActorController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_actor_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Actor $actor, ActorRepository $actorRepository): Response
     {
         $form = $this->createForm(ActorType::class, $actor);
@@ -60,7 +60,7 @@ class ActorController extends AbstractController
             //dd($form);
             $actorRepository->save($actor, true);
 
-            return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('actor_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('actor/edit.html.twig', [
@@ -69,13 +69,13 @@ class ActorController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_actor_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Actor $actor, ActorRepository $actorRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$actor->getId(), $request->request->get('_token'))) {
             $actorRepository->remove($actor, true);
         }
 
-        return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('actor_index', [], Response::HTTP_SEE_OTHER);
     }
 }
