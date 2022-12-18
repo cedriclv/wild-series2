@@ -25,6 +25,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
                 $program->setTitle('Film ' . $key . $i);
                 $program->setSynopsis('Un film populaire pour les amateurs du genre ' . $categoryName);
                 $program->setCategory($this->getReference('category_' . $categoryName));
+                $program->setOwner($this->getReference('user_' . 'contributor@monsite.com'));
                 $slug = $this->slugger->slug('Film ' . $key . $i);
                 $program->setSlug($slug);        
                 $this->addReference('program_' . $categoryName. $i, $program);

@@ -28,8 +28,8 @@ class UserFixtures extends Fixture
             $contributor,
             'contributorpassword'
         );
-
         $contributor->setPassword($hashedPassword);
+        $this->addReference('user_' . $contributor->getEmail(), $contributor);
         $manager->persist($contributor);
 
         // Création d’un utilisateur de type “administrateur”

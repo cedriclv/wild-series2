@@ -23,6 +23,7 @@
                 <td>
                     <a href="{{ path('app_comment_show', {'id': comment.id}) }}">show</a>
                     <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit</a>
+                    <a href="{{ path('app_comment_delete', {'id': comment.id}) }}">delete</a>
                 </td>
             </tr>
         {% else %}
