@@ -3,6 +3,16 @@
 {% block title %}Wild Series{% endblock %}
 
 {% block body %}
+
+
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+
+<button>Mot clé serie ou acteur</button>
+
+{{ form_end(form) }}
+
 <h1>Toutes les séries de la table program : </h1>
     {% for program in programs %}
         <div>

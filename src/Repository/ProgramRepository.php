@@ -39,7 +39,42 @@ class ProgramRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
+    public function findLikeName($name): array
+    {
+        //dd($name);
+        $queryBuilder = $this->createQueryBuilder('p')
+
+        ->where('p.title LIKE :name')
+
+        //->setParameters(['name' => '%Film 40%'])
+        ->setParameters(['name' => '%' . $name . '%'])
+
+        ->orderBy('p.title', 'ASC')
+
+        ->getQuery();
+
+
+    return $queryBuilder->getResult();
+    }
+
+    public function findLikeNameInProgramActors($search): array
+    {
+
+        $queryBuilder = $this->createQueryBuilder('p')
+        ->addSelect('a') //to make Doctrine actually use the join
+        ->leftJoin('p.actors', 'a')
+        ->Where("a.name LIKE :search")
+        ->orWhere("p.title LIKE :search")
+        ->setParameter('search', '%' . $search . '%')
+        ->getQuery();
+
+        return $queryBuilder->getResult();
+    }
+
+
+
+
+    //    /**
 //     * @return Program[] Returns an array of Program objects
 //     */
 //    public function findByExampleField($value): array
