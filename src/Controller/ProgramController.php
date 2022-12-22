@@ -12,6 +12,7 @@ use App\Service\ProgramDuration;
 use Symfony\Component\Mime\Email;
 use App\Repository\SeasonRepository;
 use App\Repository\ProgramRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +45,47 @@ class ProgramController extends AbstractController
             ]
         );
     }
+
+    #[Route('/{id}/addWatchlist', name: 'addToWatchList', methods: ["GET","POST"])]
+    public function addToWatchlist(Request $request,EntityManagerInterface $entityManager, Program $program, ProgramDuration $programDuration, ProgramRepository $programRepository): Response
+    {
+        
+        $this->getUser()->addToWatchlist($program);
+
+        $entityManager->persist($this->getUser());
+        $entityManager->flush();
+
+
+        return $this->render(
+            'program/show.html.twig',
+            [
+                'program' => $program,
+                'programDuration' => $programDuration->Calculate($program),
+            ]
+        );
+
+    }
+
+    #[Route('/{id}/removeWatchlist', name: 'removeFromWatchList', methods: ["GET","POST"])]
+    public function removeFromWatchlist(Request $request,EntityManagerInterface $entityManager, Program $program, ProgramDuration $programDuration, ProgramRepository $programRepository): Response
+    {
+        
+        $this->getUser()->removeFromWatchlist($program);
+
+        $entityManager->persist($this->getUser());
+        $entityManager->flush();
+
+
+        return $this->render(
+            'program/show.html.twig',
+            [
+                'program' => $program,
+                'programDuration' => $programDuration->Calculate($program),
+            ]
+        );
+
+    }
+
 
     #[Route("/new",name : "new")]
     public function new(Request $request, ProgramRepository $programRepository, SluggerInterface $slugger, MailerInterface $mailer): Response

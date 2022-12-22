@@ -14,3 +14,6 @@ import "./bootstrap";
 
 //Bootstrap
 require("bootstrap");
+
+//icons Bootstrap
+import 'bootstrap-icons/font/bootstrap-icons.css'; 
