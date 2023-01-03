@@ -49,20 +49,26 @@ class ProgramController extends AbstractController
     #[Route('/{id}/addWatchlist', name: 'addToWatchList', methods: ["GET","POST"])]
     public function addToWatchlist(Request $request,EntityManagerInterface $entityManager, Program $program, ProgramDuration $programDuration, ProgramRepository $programRepository): Response
     {
-        
         $this->getUser()->addToWatchlist($program);
 
         $entityManager->persist($this->getUser());
         $entityManager->flush();
+        //dd('passe dans addToWatchList');
+        
+        return $this->json([
 
-
-        return $this->render(
-            'program/show.html.twig',
-            [
-                'program' => $program,
-                'programDuration' => $programDuration->Calculate($program),
-            ]
-        );
+            'isInWatchlist' => $this->getUser()->isInWatchlist($program),
+            'programId' => $program->getId()
+       
+            ]);
+       
+        // return $this->render(
+        //     'program/show.html.twig',
+        //     [
+        //         'program' => $program,
+        //         'programDuration' => $programDuration->Calculate($program),
+        //     ]
+        // );
 
     }
 
@@ -74,15 +80,22 @@ class ProgramController extends AbstractController
 
         $entityManager->persist($this->getUser());
         $entityManager->flush();
+        //dd('passe dans removeFromWatchList');
 
+         return $this->json([
 
-        return $this->render(
-            'program/show.html.twig',
-            [
-                'program' => $program,
-                'programDuration' => $programDuration->Calculate($program),
-            ]
-        );
+            'isInWatchlist' => $this->getUser()->isInWatchlist($program),
+            'programId' => $program->getId()
+
+     ]);
+
+        // return $this->render(
+        //     'program/show.html.twig',
+        //     [
+        //         'program' => $program,
+        //         'programDuration' => $programDuration->Calculate($program),
+        //     ]
+        // );
 
     }
 
